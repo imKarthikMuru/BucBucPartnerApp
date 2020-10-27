@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:id="@+id/l1"
+        android:background="@color/pinColor"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Store Name"
+            android:textSize="18dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:id="@+id/storenameTV"
+            android:textStyle="bold"
+            android:textColor="#000"/>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_buc_buc_logo_final"
+            android:paddingTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/store_image"
+            app:civ_border_width="2dp"
+            android:layout_below="@id/storenameTV"
+            app:civ_border_color="@color/LogoOrange"
+          />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/storenameTV"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                app:cardElevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="150dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner Name"
+                        android:textSize="16dp"
+                        android:layout_gravity="center"
+                        android:id="@+id/ownerNameTv"
+                        android:textStyle="bold"
+                        android:textColor="@color/pinColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contact"
+                        android:textSize="14dp"
+                        android:id="@+id/contactTv"
+                        android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textSize="14dp"
+                        android:id="@+id/emailTv" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addressTv"
+                        android:text="Address"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:background="@color/pinColor"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="match_parent"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/DarkGray"
+            android:layout_height="wrap_content"
+            android:text="Accepting Orders"
+            android:layout_margin="10dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/dottedline"/>
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@drawable/ic_baseline_logout"
+            android:gravity="center_vertical"
+            android:text="LOGOUT"
+            android:id="@+id/BTNLogout"
+            android:textColor="#000"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:ems="10"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentRelative"
+    android:background="@color/colorPrimary"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MenuFragment">
+    
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:id="@+id/appBarLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/productCategoryRv"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/menuRV"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/ic_edit"
+            app:useCompatPadding="true"
+            android:tint="#fff"
+            style="?attr/extendedFloatingActionButtonStyle"
+            android:layout_margin="10dp"
+            app:fabSize="auto"
+            android:contentDescription="Add new Menu item"
+            app:layout_anchorGravity="center"
+            android:backgroundTint="@color/BannerOrange"
+            android:layout_height="wrap_content"
+            android:id="@+id/AddItemFAB"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

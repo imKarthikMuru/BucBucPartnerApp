@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
+    tools:context=".HomeFragment"
+    android:layout_marginBottom="?attr/actionBarSize">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        style="?actionButtonStyle"-->
+<!--        android:id="@+id/homeToolbar"-->
+<!--        >-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="45dp"-->
+<!--            android:layout_height="45dp"-->
+<!--            android:src="@drawable/logotext"/>-->
+
+<!--    </androidx.appcompat.widget.Toolbar>-->
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_fileName="loading.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:id="@+id/loading"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_height="match_parent"
+        android:id="@+id/homeRecycler"/>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+
+            android:layout_alignParentRight="true">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="auto"
+                android:layout_margin="10dp"
+                android:id="@+id/fabFilter"
+                android:backgroundTint="@color/pinColor" />
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

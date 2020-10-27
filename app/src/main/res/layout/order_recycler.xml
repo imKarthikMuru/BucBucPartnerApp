@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Customer Name"
+        android:alpha="0.8"
+        android:textColor="@color/pinColor"
+        android:id="@+id/customerName"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/areaName"
+        android:singleLine="true"
+        android:text="Area Name" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/price"
+        android:textColor="@color/pinColor"
+        android:alpha="0.8"
+        android:textStyle="bold"
+        android:text="₹200" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="5dp"
+        android:layerType="software"
+        android:src="@drawable/dottedline" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/orderDetails"
+        android:text="Ordered Items x Qty"
+        android:textSize="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Ordered Date, Time"
+        android:id="@+id/orderDate"
+        android:textSize="13dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/storked_bg"
+            android:text="Accept Order"
+            android:id="@+id/accept"
+            android:textColor="@color/LogoOrange" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/storked_gray_bg"
+            android:text="Show"
+            android:id="@+id/show"
+            android:textColor="#808080" />
+
+    </LinearLayout>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_marginTop="15dp"
+        android:alpha="0.8"
+        android:background="@android:color/black" />
+
+
+</LinearLayout>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#fff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ProfileFragment">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:backgroundTintMode="multiply"
+        android:backgroundTint="@color/BannerOrangeDark"
+        android:background="@drawable/gray_gradint_bg"
+        android:layout_height="wrap_content">
+
+
+<!--        <ImageView-->
+<!--            android:layout_width="100dp"-->
+<!--            android:padding="10dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginStart="80dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:src="@drawable/ic_shopping"-->
+<!--           />-->
+
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logotext"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            android:padding="7dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:tint="@color/LogoYellow"
+            android:id="@+id/storenameTV" />
+
+
+<!--        <ImageView-->
+<!--            android:layout_width="80dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:src="@drawable/logotext"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:padding="7dp"-->
+<!--            android:layout_marginStart="30dp"-->
+<!--            android:tint="@color/LogoYellow" />-->
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Store Name"
+            android:textSize="20dp"
+            android:layout_above="@id/detailsCV"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="-40dp"
+            android:id="@+id/storename"
+            android:textStyle="bold"
+            android:textColor="#fff"/>
+
+
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_below="@id/storenameTV"
+                app:cardElevation="5dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="5dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+            android:id="@+id/detailsCV"
+                android:layout_height="wrap_content"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner Name"
+                        android:layout_marginTop="10dp"
+                        android:textSize="16dp"
+                        android:id="@+id/ownerNameTv"
+                        android:drawablePadding="10dp"
+                        android:gravity="center"
+                        android:drawableTint="@color/BannerOrange"
+                        android:drawableStart="@drawable/ic_twotone_person"
+                        android:textStyle="bold"
+                        android:textColor="@color/pinColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contact"
+                        android:textSize="14dp"
+                        android:id="@+id/contactTv"
+                        android:gravity="center"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="@color/BannerOrange"
+                        android:drawableStart="@drawable/ic_contact"
+                        android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textSize="14dp"
+                        android:drawablePadding="10dp"
+                        android:gravity="center"
+                        android:drawableStart="@drawable/ic_mail"
+                        android:id="@+id/emailTv"
+                        android:drawableTint="@color/BannerOrange"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addressTv"
+                        android:text="Address"
+                        android:drawablePadding="10dp"
+                        android:gravity="center"
+                        android:drawableTint="@color/BannerOrange"
+                        android:drawableStart="@drawable/ic_location"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_buc_buc_logo_final"
+            android:id="@+id/store_image"
+            app:civ_border_overlay="true"
+            app:civ_border_color="#fff"
+            android:layout_alignParentEnd="true"
+            app:civ_border_width="3dp"
+            app:civ_circle_background_color="#fff"
+            android:elevation="7dp"
+            android:layout_marginEnd="40dp"
+            android:layout_below="@id/storenameTV"
+            />
+
+
+    </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="match_parent"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textColor="@color/DarkGray"
+                android:layout_height="wrap_content"
+                android:text="Accepting Orders"
+                android:layout_margin="10dp"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/dottedline"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableEnd="@drawable/ic_baseline_logout"
+                android:gravity="center_vertical"
+                android:text="LOGOUT"
+                android:id="@+id/BTNLogout"
+                android:textColor="#000"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:ems="10"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

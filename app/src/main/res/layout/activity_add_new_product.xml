@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddNewProductActivity">
+
+        <ImageView
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/imagePreview"
+        android:src="@drawable/logotext"
+        android:background="@drawable/curved_stroke"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_vegetarian_mark"
+        android:layout_alignEnd="@id/imagePreview"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="-10dp"
+        android:visibility="invisible"
+        android:id="@+id/img_veg_mark"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imagePreview"
+        android:id="@+id/tv"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:text="*for add Product Image click the above logo\nImage ratio 1:1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/product_name_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/productNameET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:paddingStart="10dp"
+                android:inputType="textPersonName|textCapWords"
+                android:hint="Product Name" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/description_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/DescriptionET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:paddingStart="10dp"
+                android:inputType="textPersonName|textCapSentences"
+                android:hint="Description / Size (Optional)" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/price_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/PriceET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:paddingStart="10dp"
+                android:inputType="number"
+                android:hint="Price ₹" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/Size_text_input_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/quantityET"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ems="10"
+                    android:paddingStart="10dp"
+                    android:inputType="number"
+                    android:hint="Quantity" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="QtyIn"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:id="@+id/qtyInTv"/>
+
+                <Spinner
+                    android:id="@+id/sizeSpinner"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                  android:layout_gravity="bottom"
+                    android:paddingStart="10dp"
+                    android:hint="Description" />
+
+
+            </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingStart="10dp"
+            android:id="@+id/categoryTv"
+            android:text="Product Category"/>
+
+            <Spinner
+                android:id="@+id/typeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:paddingStart="10dp"
+                android:hint="Description" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioGroup"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/vegRb"
+                android:drawableEnd="@drawable/ic_vegetarian_mark"
+                android:drawablePadding="10dp"
+                android:text="Veg"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/NonVegRB"
+                android:drawableEnd="@drawable/ic_vegetarian_mark"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/quantum_vanillared700"
+                android:layout_marginStart="30dp"
+                android:text="Non-Veg"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/curved_stroke"
+        android:backgroundTint="@color/pinColor"
+        android:layout_margin="20dp"
+        android:text="Add Product"
+        android:textColor="#fff"
+        android:textSize="16dp"
+        android:id="@+id/btnAddProduct"/>
+
+</RelativeLayout>
