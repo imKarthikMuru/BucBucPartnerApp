@@ -2,7 +2,10 @@ package com.sng.bucbuc_partnerapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,7 +13,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +40,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -227,12 +236,39 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     private void ShowPopupMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
+        Context wrapper = new ContextThemeWrapper(this, R.style.myPopupMenuTextAppearanceColor);
+         PopupMenu popup = new PopupMenu(wrapper, v);
+         popup.setGravity(Gravity.RIGHT);
         // Inflate the menu from xml
         popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
+
+        try {
+            Field[] fields = popup.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popup);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MenuItem item = popup.getMenu().findItem(R.id.cancel);
+        SpannableString s = new SpannableString(item.getTitle());
+        s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(OrderDetailsActivity.this, R.color.BannerOrangeDark)), 0, s.length(), 0);
+        s.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        item.setTitle(s);
+
+
         // Setup menu item selection
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
+
                 switch (item.getItemId()) {
 
                     case R.id.accept:
@@ -252,6 +288,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                     case R.id.delivered:
                         Orderstatus="Delivered";
+                        UpdateOrderStatus(Orderstatus);
+                        return true;
+
+                    case R.id.cancel:
+                        Orderstatus="Cancelled";
                         UpdateOrderStatus(Orderstatus);
                         return true;
 
@@ -297,5 +338,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 loadingView.hideProgress();
             }
         });
+    }
+
+    public void Back(View view) {
+        finish();
     }
 }

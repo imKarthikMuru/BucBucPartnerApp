@@ -88,4 +88,12 @@
         <item name="android:topBright">@android:color/transparent</item>
         <item name="android:topDark">@android:color/transparent</item>
     </style>
+
+    <style name="myPopupMenuTextAppearanceColor" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:itemBackground">@color/white</item>
+        <item name="android:textColor">@color/pinColor</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

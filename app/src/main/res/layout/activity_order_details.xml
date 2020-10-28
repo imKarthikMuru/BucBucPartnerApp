@@ -19,6 +19,7 @@
         android:layout_height="45dp"
         android:src="@drawable/quantum_ic_arrow_back_grey600_24"
         android:padding="10dp"
+        android:onClick="Back"
         android:tint="@color/pinColor"
         android:alpha="0.8"/>
 
@@ -122,19 +123,19 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/orderRecycler"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="----------- End of Product List -----------"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:text="-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; End of Product List -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;"/>-->
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/pinColor"
-                android:alpha="0.5"
-                android:layout_marginTop="10dp"/>
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:background="@color/pinColor"-->
+<!--                android:alpha="0.5"-->
+<!--                android:layout_marginTop="10dp"/>-->
 
             <TextView
                 android:layout_width="wrap_content"

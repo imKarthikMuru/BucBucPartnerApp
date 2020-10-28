@@ -2,8 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:background="@color/colorPrimary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+ >
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/orderDetails"
+        android:singleLine="true"
         android:text="Ordered Items x Qty"
         android:textSize="16dp" />
 
@@ -68,7 +72,9 @@
             android:background="@drawable/storked_bg"
             android:text="Accept Order"
             android:id="@+id/accept"
-            android:textColor="@color/LogoOrange" />
+            android:clickable="true"
+            android:textColor="@color/LogoOrange"
+            android:focusable="true" />
 
         <Button
             android:layout_width="wrap_content"
@@ -78,7 +84,9 @@
             android:background="@drawable/storked_gray_bg"
             android:text="Show"
             android:id="@+id/show"
-            android:textColor="#808080" />
+            android:clickable="true"
+            android:textColor="#808080"
+            android:focusable="true" />
 
     </LinearLayout>
 

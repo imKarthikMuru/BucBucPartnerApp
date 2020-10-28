@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/all"
+        android:title="All Orders"/>
+
+    <item
+        android:id="@+id/placed"
+        android:title="Placed Orders"/>
+
+    <item
+        android:id="@+id/accept"
+        android:title="Accepted Orders"/>
+
+    <item
+        android:id="@+id/prepare"
+        android:title="Prepared Orders"/>
+
+    <item
+        android:id="@+id/shipped"
+        android:title="Shipped Orders"/>
+
+    <item
+        android:id="@+id/delivered"
+        android:title="Delivered Orders"/>
+
+    <item
+        android:id="@+id/cancelled"
+        android:title="Cancelled Orders"/>
+
+</menu>

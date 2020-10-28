@@ -293,7 +293,7 @@ public class MenuFragment extends Fragment {
                             public void onClick(View v) {
                                 Intent intent=new Intent(getContext(),AddNewProductActivity.class);
                                 intent.putExtra("Post",model.getProductId());
-                                intent.putExtra("PostKey",post_key);
+                                intent.putExtra("PostKey",model.getCategoryType());
                                 startActivity(intent);
                             }
                         });
