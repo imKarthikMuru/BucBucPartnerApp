@@ -16,12 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     String uid;
+    String userToken;
 
     private static final String TAG = "MainActivity";
     BottomNavigationView bottomNavigationView;
@@ -43,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         //instance for Bottom Navigation
         bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-
 
         bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
             @Override
@@ -60,7 +64,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-           uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            Log.d(TAG, "onComplete: :::::::::::::"+task.getResult().getToken());
+
+                            userToken=task.getResult().getToken();
+
+                            Map<String, Object> token = new HashMap<>();
+                            token.put("PushToken",userToken);
+
+                            FirebaseDatabase.getInstance().getReference("Stores").child(uid).child("StoreDetails")
+                                    .updateChildren(token).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(MainActivity.this, "Loaded Successfully.!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
