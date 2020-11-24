@@ -21,10 +21,10 @@
         android:title="Shipped"
     />
 
-    <item
-        android:icon="@drawable/ic_delivered"
-        android:id="@+id/delivered"
-        android:title="Delivered"/>
+<!--    <item-->
+<!--        android:icon="@drawable/ic_delivered"-->
+<!--        android:id="@+id/delivered"-->
+<!--        android:title="Delivered"/>-->
 
     <item
         android:icon="@drawable/ic_cancel"

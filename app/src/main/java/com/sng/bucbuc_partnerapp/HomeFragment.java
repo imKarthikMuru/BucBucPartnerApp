@@ -99,133 +99,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        adapter=new FirebaseRecyclerAdapter<OrderModelCLass,OrdersViewHolder>(options) {
-//            @NonNull
-//            @Override
-//            public OrdersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.order_recycler, parent, false);
-//                return  new OrdersViewHolder(v);
-//            }
-//
-//            @Override
-//            protected void onBindViewHolder(@NonNull final OrdersViewHolder holder, int position, @NonNull final OrderModelCLass model) {
-//
-//                Loading.setVisibility(View.GONE);
-//
-//                final DatabaseReference ref=getRef(position);
-//                final String post=ref.getKey();
-//
-//                holder.CustomeName.setText(model.getName());
-//                holder.AreaNameTV.setText(model.getAddress());
-//                holder.RateTV.setText("₹"+model.getToPay());
-//                holder.RateTV.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-//
-//                final List<String> list=new ArrayList<>();
-//                final StringBuilder builder = new StringBuilder();
-//
-//                reference.child(post).child("Products").orderByChild("ProductName").addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        for (DataSnapshot data:dataSnapshot.getChildren()){
-//
-//                            list.add(data.child("ProductName").getValue()+" x "+data.child("Quantity").getValue());
-//                            Log.d(TAG, "onBindViewHolder: ::::::::::::"+list.size()+"::::::::;"+list.toString());
-//
-//                        }
-//
-//                        for (int i=0;i<list.size();i++){
-//                            if (i < list.size() - 1) {
-//                                builder.append(list.get(i).toString()+", ");
-//                            } else {
-//                                builder.append(list.get(i).toString());
-//                            }
-//
-//                        }
-//
-//                        holder.OrderDetailsTV.setText(builder.toString());
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//
-//                holder.Show.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        startActivity(new Intent(getContext(),OrderDetailsActivity.class)
-//                        .putExtra("PostKey",post));
-//                    }
-//                });
-//
-//                holder.OrderedDateTime.setText(model.getOrderedDate()+" "+model.getTime());
-//
-//                switch (model.getOrderStatus()) {
-//                    case "Accepted":
-//                        holder.Accept.setText("Order Accepted");
-//                        holder.Accept.setEnabled(false);
-//                        break;
-//                    case "Prepared":
-//                        holder.Accept.setText("Order Preparing");
-//                        holder.Accept.setEnabled(false);
-//                        break;
-//                    case "Shipped":
-//                        holder.Accept.setText("Order Shipped");
-//                        holder.Accept.setEnabled(false);
-//                        break;
-//                    case "Delivered":
-//                        holder.Accept.setText("Delivered");
-//                        holder.Accept.setEnabled(false);
-//                        break;
-//                    default:
-//                        holder.Accept.setText("Accept Order");
-//                        holder.Accept.setEnabled(true);
-//                        break;
-//                }
-//
-//                holder.Accept.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        loadingView.ShowProgress(getContext(),"Hold Tight! ",false);
-//
-//                        final Map<String, Object> Accept = new HashMap<>();
-//                        Accept.put("OrderStatus","Accepted");
-//
-//                        reference.child(post).updateChildren(Accept).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//
-//                                if (task.isSuccessful()){
-//
-//                                    FirebaseDatabase.getInstance().getReference("Users").child(model.getUserID())
-//                                            .child("MyOrders").child(post).updateChildren(Accept).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            if (task.isSuccessful()){
-//                                                holder.Accept.setText("Order Accepted");
-//                                                holder.Accept.setEnabled(false);
-//                                            }else {
-//                                                holder.Accept.setText("Try Again");
-//                                                Toast.makeText(getContext(), "Oh Snap! Something went wrong.", Toast.LENGTH_SHORT).show();
-//                                            }
-//
-//                                        }
-//                                    });
-//
-//                                }else {
-//                                    Toast.makeText(getContext(), "Oh Snap! Something went wrong.", Toast.LENGTH_SHORT).show();
-//                                }
-//                                loadingView.hideProgress();
-//                            }
-//                        });
-//                    }
-//                });
-//            }
-//        };
-
         LinearLayoutManager manager=new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,true);
         manager.setStackFromEnd(true);
         HomeRecyclerView.setAdapter(adapter);
@@ -415,6 +288,7 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<OrderModelCLass,OrdersV
                 break;
             case "Cancelled":
                 holder.Accept.setText("Cancelled");
+                holder.Accept.setTextColor(getResources().getColor(R.color.quantum_googred));
                 holder.Accept.setEnabled(false);
                 break;
             default:

@@ -3,14 +3,14 @@ package com.sng.bucbuc_partnerapp;
 public class OrderModelCLass {
 
 
-    String Name,Address,Mobile,AddressType,ProductName,ProductID,StoreID,OrderedDate,Time,OrderStatus,UserID,PaymentMethod,Category,Suggestion;
+    String Name,Address,Mobile,AddressType,ProductName,ProductID,StoreID,OrderedDate,Time,OrderStatus,UserID,PaymentMethod,Category,Suggestion,DriverID;
     int Quantity;
     float Price,ToPay;
 
     public OrderModelCLass() {
     }
 
-    public OrderModelCLass(String name, String address, String mobile, String addressType, String productName, String productID, String storeID, String orderedDate, String time, String orderStatus, String userID, String paymentMethod, String category, String suggestion, int quantity, float price, float toPay) {
+    public OrderModelCLass(String name, String address, String mobile, String addressType, String productName, String productID, String storeID, String orderedDate, String time, String orderStatus, String userID, String paymentMethod, String category, String suggestion, String driverID, int quantity, float price, float toPay) {
         Name = name;
         Address = address;
         Mobile = mobile;
@@ -25,9 +25,18 @@ public class OrderModelCLass {
         PaymentMethod = paymentMethod;
         Category = category;
         Suggestion = suggestion;
+        DriverID = driverID;
         Quantity = quantity;
         Price = price;
         ToPay = toPay;
+    }
+
+    public String getDriverID() {
+        return DriverID;
+    }
+
+    public void setDriverID(String driverID) {
+        DriverID = driverID;
     }
 
     public String getSuggestion() {

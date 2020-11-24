@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -16,12 +18,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //instance for Bottom Navigation
         bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -187,6 +194,16 @@ public class MainActivity extends AppCompatActivity {
                                         Map<String, Object> StoreLatLng = new HashMap<>();
                                         StoreLatLng.put("Lat",latitude);
                                         StoreLatLng.put("Lng",longitude);
+
+                                        SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences("StoreData", Context.MODE_PRIVATE).edit();
+                                        editor.putString("Lat", String.valueOf(latitude));
+                                        editor.putString("Long", String.valueOf(longitude));
+                                        editor.putString("StoreName",String.valueOf(snapshot.child("StoreName").getValue()));
+                                        editor.putString("Address",StoreAddress);
+                                        editor.putString("PushToken",String.valueOf(snapshot.child("PushToken").getValue()));
+                                        editor.putString("Mobile",String.valueOf(snapshot.child("ContactNo").getValue()));
+                                        editor.apply();
+
 
                                         FirebaseDatabase.getInstance().getReference("Stores").child(uid).child("StoreDetails").updateChildren(StoreLatLng);
                                     }else {

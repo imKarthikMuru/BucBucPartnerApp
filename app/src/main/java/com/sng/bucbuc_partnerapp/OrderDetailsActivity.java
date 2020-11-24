@@ -1,6 +1,7 @@
 package com.sng.bucbuc_partnerapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.view.menu.MenuPopupHelper;
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -26,10 +29,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +52,10 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +63,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "OrderDetailsActivity";
     
-    String post;
+    String post,status;
     String uid;
     DatabaseReference reference;
     TextView OrderedDateTV,NameTV,MobileTV,AddressTV,PaymentTV,CallCustomerTV;
@@ -62,13 +76,30 @@ public class OrderDetailsActivity extends AppCompatActivity {
     String Orderstatus;
     String userId;
     String note=null;
+    String storeID;
 
     int toPay=0,deliveryFee=0,taxes=0,total=0;
 
-    FirebaseRecyclerAdapter adapter;
+    FirebaseRecyclerAdapter adapter,driverAdapter;
     FirebaseRecyclerOptions<OrderModelCLass> options;
+    FirebaseRecyclerOptions<DriverModelClass> driverOptions;
+
+    Button AssignDriver;
+
+    DatabaseReference DriverRef;
 
     LoadingView loadingView=LoadingView.getInstance();
+
+    AlertDialog.Builder dialogBuilder;
+    AlertDialog alertDialog;
+
+    RecyclerView DriversRecyclerView;
+
+    LatLng StoreLatLng,DriverLatLng;
+    double storeLat,StoreLng,DriverLat,DriverLng;
+    SharedPreferences prefs;
+     String OrderedDate;
+     String Time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +129,28 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         recyclerView=(RecyclerView)findViewById(R.id.orderRecycler);
 
+        AssignDriver=(Button)findViewById(R.id.assignDriver);
+        Context context;
+        dialogBuilder=new AlertDialog.Builder(this);
+
+        LayoutInflater inflater=this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.driver_list_dialog, null);
+
+        DriversRecyclerView=(RecyclerView)dialogView.findViewById(R.id.driverRecyclerview);
+
+        final DateFormat date = new SimpleDateFormat("dd-MMMM-yyyy");
+        OrderedDate = date.format(Calendar.getInstance().getTime());
+
+        final DateFormat time = new SimpleDateFormat("hh:mm a");
+        Time = time.format(Calendar.getInstance().getTime());
+
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(true);
+
+        alertDialog=dialogBuilder.create();
+        alertDialog.setCancelable(true);
+
         manager=new LinearLayoutManager(OrderDetailsActivity.this,RecyclerView.VERTICAL,false);
         recyclerView.setLayoutManager(manager);
 
@@ -110,7 +163,162 @@ public class OrderDetailsActivity extends AppCompatActivity {
             }
         });
 
+        DriverRef=FirebaseDatabase.getInstance().getReference("Drivers");
+
+         prefs = getApplicationContext().getSharedPreferences("StoreData", MODE_PRIVATE);
+         storeLat= Double.parseDouble(prefs.getString("Lat","0"));
+         StoreLng=Double.parseDouble(prefs.getString("Long","0"));
+         storeID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+         StoreLatLng=new LatLng(storeLat,StoreLng );
+
         reference= FirebaseDatabase.getInstance().getReference("Stores").child(uid);
+
+        driverOptions=new FirebaseRecyclerOptions.Builder<DriverModelClass>()
+                .setQuery(DriverRef,DriverModelClass.class).build();
+
+        driverAdapter=new FirebaseRecyclerAdapter<DriverModelClass,DriverAssignViewHolder>(driverOptions) {
+            @NonNull
+            @Override
+            public DriverAssignViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+               View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.driver_list, parent, false);
+               return  new DriverAssignViewHolder(v);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull final DriverAssignViewHolder holder, int position, @NonNull final DriverModelClass model) {
+
+                DatabaseReference ref=getRef(position);
+                final String driverKey=ref.getKey();
+
+                holder.DriverName.setText(model.getName());
+
+                DriverLat=Double.parseDouble(String.valueOf(model.getLat()));
+                DriverLng=Double.parseDouble(String.valueOf(model.getLng()));
+
+                Log.d(TAG, "onBindViewHolder: :::::::::::::"+storeLat+":::::"+StoreLng+":::::::::::Drive::::"+DriverLat+"::::"+DriverLng);
+
+                DriverLatLng=new LatLng(DriverLat,DriverLng );
+
+                    if (StoreLatLng == null || DriverLatLng == null) {
+                        Toast.makeText(OrderDetailsActivity.this, "Unable to get Drivers Location.", Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+                        Routing routing = new Routing.Builder()
+                                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                                .withListener(new RoutingListener() {
+                                    @Override
+                                    public void onRoutingFailure(RouteException e) {
+                                        holder.DriverETA.setText("Cannot find any possible of ETA.");
+                                        holder.AssignDriver.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onRoutingStart() {
+                                        holder.AssignDriver.setVisibility(View.GONE);
+                                        holder.DriverETA.setText("...");
+                                    }
+
+                                    @Override
+                                    public void onRoutingSuccess(ArrayList<Route> arrayList, int i) {
+
+                                        for (int j = 0; j < arrayList.size(); j++) {
+                                            String eta = String.valueOf(arrayList.get(j).getDurationText());
+                                            holder.DriverETA.setText(eta);
+//                                            holder.AssignDriver.setVisibility(View.VISIBLE);
+
+                                            DriverRef.child(driverKey)
+                                                    .child("Pending").addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                                    Log.d(TAG, "onDataChange: ::::::::::::::::"+snapshot.getChildrenCount());
+
+                                                    if (snapshot.getChildrenCount()<=0){
+                                                        holder.AssignDriver.setVisibility(View.VISIBLE);
+                                                    }else {
+                                                        holder.AssignDriver.setVisibility(View.GONE);
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void onRoutingCancelled() {
+
+                                    }
+                                })
+                                .waypoints(DriverLatLng, StoreLatLng)
+                                .key(getString(R.string.Google_Api_Key))
+                                .build();
+                        routing.execute();
+                    }
+
+                    final Map<String, Object> assignDriver = new HashMap<>();
+                    assignDriver.put("StoreID",storeID);
+                    assignDriver.put("OrderID",post);
+                    assignDriver.put("Date",OrderedDate);
+                    assignDriver.put("Time",Time);
+
+                    final Map<String, Object> Driver = new HashMap<>();
+                    Driver.put("DriverID",driverKey);
+
+
+                    holder.AssignDriver.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DriverRef.child(driverKey)
+                                    .child("Pending")
+                                    .child(post)
+                                    .setValue(assignDriver)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                holder.AssignDriver.setText("Assigned");
+                                                holder.AssignDriver.setEnabled(false);
+                                                AssignDriver.setText(model.getName());
+                                                reference.child("Orders")
+                                                        .child(post)
+                                                        .updateChildren(Driver);
+                                                FirebaseDatabase.getInstance().getReference("Users").child(userId)
+                                                        .child("MyOrders")
+                                                        .child(post)
+                                                        .updateChildren(Driver);
+                                            }else {
+                                                holder.AssignDriver.setEnabled(true);
+                                                Toast.makeText(OrderDetailsActivity.this, "Oops! something went wrong.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+                        }
+                    });
+                }
+
+        };
+
+        DriversRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL,false));
+        DriversRecyclerView.setAdapter(driverAdapter);
+        driverAdapter.startListening();
+
+        AssignDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.show();
+            }
+        });
+
         reference.child("Orders")
         .child(post).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -140,9 +348,30 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                             }
 
-                            String status=String.valueOf(snapshot.child("OrderStatus").getValue());
+                            status=String.valueOf(snapshot.child("OrderStatus").getValue());
 
-                            UpdateStatus.setText(status+" (UPDATE STATUS)");
+                            if (snapshot.child("DriverID").exists()){
+                                DriverRef.child(String.valueOf(snapshot.child("DriverID").getValue())).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        AssignDriver.setText(String.valueOf(dataSnapshot.child("Name").getValue()));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }else {
+                                AssignDriver.setText("Assign Driver");
+                            }
+
+                            if (status.equals("Delivered")||status.equals("Cancelled")){
+                                AssignDriver.setVisibility(View.GONE);
+                            }
+
+                            UpdateStatus.setText(status);
 
                             userId=String.valueOf(snapshot.child("UserID").getValue());
 
@@ -286,10 +515,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         UpdateOrderStatus(Orderstatus);
                         return true;
 
-                    case R.id.delivered:
-                        Orderstatus="Delivered";
-                        UpdateOrderStatus(Orderstatus);
-                        return true;
+//                    case R.id.delivered:
+//                        Orderstatus="Delivered";
+//                        UpdateOrderStatus(Orderstatus);
+//                        return true;
 
                     case R.id.cancel:
                         Orderstatus="Cancelled";
@@ -323,7 +552,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                               UpdateStatus.setText(status+" (UPDATE STATUS)");
+                               UpdateStatus.setText(status);
                             }else {
                                UpdateStatus.setText("Update Order Status");
                                 Toast.makeText(OrderDetailsActivity.this, "Oh Snap! Something went wrong.", Toast.LENGTH_SHORT).show();

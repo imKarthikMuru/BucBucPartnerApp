@@ -37,7 +37,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_above="@id/updateStatus"
+        android:layout_above="@id/l2"
         android:layout_height="match_parent"
         android:layout_below="@id/orderToolBar"
         android:scrollbars="none">
@@ -94,6 +94,9 @@
                     android:backgroundTint="@color/material_green_500"
                     android:padding="10dp"
                     android:layout_alignParentLeft="true"
+                    android:drawableStart="@drawable/ic_round_payment"
+                    android:drawablePadding="5dp"
+                    android:drawableTint="@color/white"
                     android:layout_gravity="start"
                     android:background="@drawable/curved_stroke"
                     android:text="Payment Type"/>
@@ -106,6 +109,9 @@
                     android:padding="10dp"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="end"
+                    android:drawableStart="@drawable/ic_round_call"
+                    android:drawablePadding="5dp"
+                    android:drawableTint="@color/white"
                     android:background="@drawable/curved_stroke"
                     android:text="Call Customer"
                     android:id="@+id/callTV"/>
@@ -295,14 +301,35 @@
 
  </androidx.core.widget.NestedScrollView>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:text="Update Status"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/updateStatus"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:background="@color/pinColor"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/l2"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Assign Driver"
+            android:id="@+id/assignDriver"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:background="@color/pinColor"/>
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:text="Update Status"
+            android:id="@+id/updateStatus"
+            android:textColor="#fff"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
+            android:background="@color/pinColor"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
