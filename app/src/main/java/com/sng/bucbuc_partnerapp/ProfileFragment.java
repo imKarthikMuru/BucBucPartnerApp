@@ -1,32 +1,43 @@
 package com.sng.bucbuc_partnerapp;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.skyfishjy.library.RippleBackground;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,15 +45,28 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
 
-    TextView StoreNameTV,OwnerNameTv,AddressTv,EmailTv,ContactNoTV;
+    TextView StoreNameTV,OwnerNameTv,AddressTv,EmailTv,ContactNoTV,TotalProducts;
     CircleImageView StoreImage;
     TextView LogoutBTN;
-    String store_name,owner_name,address,email,store_image,contact;
+    String store_name,owner_name,address,email,store_image,contact,offer,coupon;
 
     LoadingView loadingView=LoadingView.getInstance();
 
     String uid;
     DatabaseReference reference;
+
+    SwitchCompat OnlineSwitch;
+    TextView CouponTV,OfferTV;
+
+    BottomSheetDialog couponDialog,offerDialog;
+    EditText couponET,offerET;
+    Button couponUpdate,offerUpdate;
+    TextView ongoingCoupon,ongoingOffer;
+
+    Map<String, Object> discount=new HashMap<>();
+    Map<String, Object> StoreStatus=new HashMap<>();
+
+    int products=0;
 
     @Nullable
     @Override
@@ -57,6 +81,28 @@ public class ProfileFragment extends Fragment {
         LogoutBTN = (TextView) view.findViewById(R.id.BTNLogout);
         ContactNoTV=view.findViewById(R.id.contactTv);
 
+        OnlineSwitch=(SwitchCompat)view.findViewById(R.id.StatusSwitch);
+        CouponTV=(TextView)view.findViewById(R.id.coupon);
+        OfferTV=(TextView)view.findViewById(R.id.offer);
+        TotalProducts=(TextView)view.findViewById(R.id.totalProducts);
+
+        couponDialog=new BottomSheetDialog(getContext());
+        couponDialog.setContentView(R.layout.coupon_dialog);
+        couponDialog.setCancelable(true);
+        couponDialog.setCanceledOnTouchOutside(true);
+
+        couponET=(EditText)couponDialog.findViewById(R.id.couponet);
+        couponUpdate=couponDialog.findViewById(R.id.couponbtn);
+        ongoingCoupon=couponDialog.findViewById(R.id.coupontv);
+
+        offerDialog=new BottomSheetDialog(getContext());
+        offerDialog.setContentView(R.layout.offer_dialog);
+        offerDialog.setCancelable(true);
+        offerDialog.setCanceledOnTouchOutside(true);
+
+        offerET=(EditText)offerDialog.findViewById(R.id.offeret);
+        offerUpdate=offerDialog.findViewById(R.id.offerbtn);
+        ongoingOffer=offerDialog.findViewById(R.id.offer);
 
         loadingView.ShowProgress(getContext(),"Loading your profile.",true);
 
@@ -77,6 +123,43 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
+            }
+        });
+
+        CouponTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                couponDialog.show();
+            }
+        });
+
+        OfferTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                offerDialog.show();
+            }
+        });
+        
+        OnlineSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    StoreStatus.put("Status","Online");
+                }
+                else {
+                    StoreStatus.put("Status","Offline");
+                }
+                reference.updateChildren(StoreStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getContext(), "Status updated.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getContext(), "Oops..something went wrong!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
         });
 
@@ -124,6 +207,38 @@ public class ProfileFragment extends Fragment {
 
         if (uid!=null){
 
+            FirebaseDatabase.getInstance().getReference("Stores").child(uid).child("Products").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    Query query;
+
+                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        query=FirebaseDatabase.getInstance().getReference("Stores").child(uid)
+                                .child("Products").child(dataSnapshot.getRef().getKey());
+
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dsnapshot) {
+                                products+=Integer.parseInt(String.valueOf(dsnapshot.getChildrenCount()));
+
+                                TotalProducts.setText(""+products);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -138,6 +253,96 @@ public class ProfileFragment extends Fragment {
 
                             InitView();
 
+                            if (snapshot.child("Coupon").exists()){
+                                coupon=String.valueOf(snapshot.child("Coupon").getValue());
+                                CouponTV.setText(coupon);
+                                ongoingCoupon.setText(coupon);
+                            }else {
+                                ongoingCoupon.setText("Add Coupon");
+                                CouponTV.setText("Add Coupon");
+                            }
+
+                            if (snapshot.child("Offer").exists()){
+                                offer=String.valueOf(snapshot.child("Offer").getValue());
+                                OfferTV.setText(offer+" OFF");
+                                ongoingOffer.setText(offer+"% OFF");
+                            }else {
+                                ongoingOffer.setText("Add offer");
+                                OfferTV.setText("Add Offer");
+                            }
+
+                            couponUpdate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    String changedCoupon=couponET.getText().toString().trim();
+                                    if (changedCoupon.isEmpty()){
+                                        reference.child("Coupon").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                               if (task.isSuccessful()){
+                                                   Toast.makeText(getContext(), "Coupon deleted.", Toast.LENGTH_SHORT).show();
+                                               }else{
+                                                   Toast.makeText(getContext(), "Oops! something went wrong.", Toast.LENGTH_SHORT).show();
+                                               }
+                                            }
+                                        });
+                                    }else {
+                                        loadingView.ShowProgress(getContext(),"Updating Coupons..",false);
+                                        discount.put("Coupon",changedCoupon);
+                                        reference.updateChildren(discount).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                loadingView.hideProgress();
+                                                if (task.isSuccessful()){
+                                                    Toast.makeText(getContext(), "Coupon changed.", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(getContext(), "Oops! something went wrong.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+
+                            offerUpdate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    String changedOffer=offerET.getText().toString().trim();
+                                    if (changedOffer.isEmpty()){
+                                        reference.child("Offer").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    Toast.makeText(getContext(), "Offer deleted.", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(getContext(), "Oops! something went wrong.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }else {
+                                        discount.put("Offer",changedOffer);
+                                        loadingView.ShowProgress(getContext(),"Updating Offers..",false);
+                                        reference.updateChildren(discount).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                loadingView.hideProgress();
+                                                if (task.isSuccessful()){
+                                                    Toast.makeText(getContext(), "Offer changed.", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(getContext(), "Oops! something went wrong.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+
+                            String status=String.valueOf(snapshot.child("Status").getValue());
+                            if (status.equals("Online")){
+                                OnlineSwitch.setChecked(true);
+                            }else {
+                                OnlineSwitch.setChecked(false);
+                            }
                         }
 
                 }

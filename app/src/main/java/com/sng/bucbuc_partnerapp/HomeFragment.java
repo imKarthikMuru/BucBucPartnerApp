@@ -2,8 +2,11 @@ package com.sng.bucbuc_partnerapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -11,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,10 +56,44 @@ public class HomeFragment extends Fragment {
     LottieAnimationView Loading;
     SwipeRefreshLayout refreshLayout;
 
+    LinearLayoutManager manager;
     LoadingView loadingView=LoadingView.getInstance();
 
     String filter;
     FloatingActionButton FilterFAB;
+
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
+    private Parcelable mListState = null;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mBundleRecyclerViewState = new Bundle();
+        mListState = HomeRecyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, mListState);
+
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mBundleRecyclerViewState != null) {
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    mListState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+                    HomeRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+
+                }
+            }, 50);
+        }
+
+        HomeRecyclerView.setLayoutManager(manager);
+    }
 
     @Nullable
     @Override
@@ -99,7 +137,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        LinearLayoutManager manager=new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,true);
+         manager=new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,true);
         manager.setStackFromEnd(true);
         HomeRecyclerView.setAdapter(adapter);
         HomeRecyclerView.setLayoutManager(manager);

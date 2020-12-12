@@ -87,7 +87,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:3.4.2'
 
     implementation 'com.github.beigirad:ZigzagView:1.0.7'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+//    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     //GeoFire
     implementation 'com.firebase:geofire-android:3.0.0'

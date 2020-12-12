@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.sng.bucbuc_partnerapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,6 +18,18 @@
         <activity android:name=".OrderDetailsActivity"></activity>
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".LoginActivity" />
+
+        <activity
+            android:name=".MenuFragment"
+            tools:ignore="Instantiatable"
+            android:configChanges="orientation|screenSize"/>
+
+
+        <activity
+            android:name=".HomeFragment"
+            tools:ignore="Instantiatable"
+            android:configChanges="orientation|screenSize"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

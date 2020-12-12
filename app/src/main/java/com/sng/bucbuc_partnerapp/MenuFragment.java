@@ -1,9 +1,13 @@
 package com.sng.bucbuc_partnerapp;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -65,6 +69,63 @@ public class MenuFragment extends Fragment {
     RecyclerView.LayoutManager manager;
     ItemTouchHelper helper;
 
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
+    private Parcelable mListState = null;
+
+    private final String Product_RECYCLER_STATE = "Product_recycler_state";
+    private static Bundle ProductBundleRecyclerViewState;
+    private Parcelable ProductListState = null;
+
+    Dialog dialog;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        ProductBundleRecyclerViewState = new Bundle();
+        ProductListState = CategoryRV.getLayoutManager().onSaveInstanceState();
+        ProductBundleRecyclerViewState.putParcelable(Product_RECYCLER_STATE, ProductListState);
+
+        mBundleRecyclerViewState = new Bundle();
+        mListState = recyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, mListState);
+
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mBundleRecyclerViewState != null) {
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    mListState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+                    recyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+
+                }
+            }, 50);
+        }
+
+        if (ProductBundleRecyclerViewState != null) {
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    ProductListState = ProductBundleRecyclerViewState.getParcelable(Product_RECYCLER_STATE);
+                    CategoryRV.getLayoutManager().onRestoreInstanceState(ProductListState);
+
+                }
+            }, 50);
+        }
+
+        recyclerView.setLayoutManager(manager);
+        CategoryRV.setLayoutManager(linearLayoutManager);
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -84,6 +145,20 @@ public class MenuFragment extends Fragment {
                 startActivity(new Intent(getContext(),AddNewProductActivity.class));
             }
         });
+
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        reference = FirebaseDatabase.getInstance().getReference("Stores").child(uid).child("Products");
+        loadingView.ShowProgress(getContext(), "Loading your Products", true);
+
+        manager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(manager);
+
+        linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        CategoryRV.setLayoutManager(linearLayoutManager);
+
+        CategoryFilterRv();
+        PopulateNestedRecyclerView();
 
         return view;
     }
@@ -161,13 +236,6 @@ public class MenuFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        reference = FirebaseDatabase.getInstance().getReference("Stores").child(uid).child("Products");
-        loadingView.ShowProgress(getContext(), "Loading your Products", true);
-
-        CategoryFilterRv();
-        PopulateNestedRecyclerView();
     }
 
     private void PopulateNestedRecyclerView() {
@@ -310,9 +378,8 @@ public class MenuFragment extends Fragment {
         };
 
         adapter.startListening();
-        adapter.notifyDataSetChanged();
-        manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
+//        adapter.notifyDataSetChanged();
+
         recyclerView.setAdapter(adapter);
 
 
@@ -358,9 +425,8 @@ public class MenuFragment extends Fragment {
 
 
         };
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        CategoryRV.setLayoutManager(linearLayoutManager);
-        catagoryAdapter.notifyDataSetChanged();
+
+//        catagoryAdapter.notifyDataSetChanged();
         catagoryAdapter.startListening();
         CategoryRV.setAdapter(catagoryAdapter);
     }
@@ -368,16 +434,16 @@ public class MenuFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter!=null){
-            adapter.startListening();
-        }
+//        if (adapter!=null){
+//            adapter.startListening();
+//        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (adapter!=null){
-            adapter.stopListening();
-        }
+//        if (adapter!=null){
+//            adapter.stopListening();
+//        }
     }
 }

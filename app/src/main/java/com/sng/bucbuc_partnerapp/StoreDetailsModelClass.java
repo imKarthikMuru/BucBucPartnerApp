@@ -1,12 +1,12 @@
 package com.sng.bucbuc_partnerapp;
 
 class StoreDetailsModelClass {
-    String StoreOwnerName,StoreMail,ContactNo,Address,StoreImage,StoreName,StoreLogo,AcceptingOrders,Category,PushToken;
+    String StoreOwnerName,StoreMail,ContactNo,Address,StoreImage,StoreName,StoreLogo,AcceptingOrders,Category,PushToken,Status;
 
     public StoreDetailsModelClass() {
     }
 
-    public StoreDetailsModelClass(String storeOwnerName, String storeMail, String contactNo, String address, String storeImage, String storeName, String storeLogo, String acceptingOrders, String category, String pushToken) {
+    public StoreDetailsModelClass(String storeOwnerName, String storeMail, String contactNo, String address, String storeImage, String storeName, String storeLogo, String acceptingOrders, String category, String pushToken,String status) {
         StoreOwnerName = storeOwnerName;
         StoreMail = storeMail;
         ContactNo = contactNo;
@@ -17,6 +17,15 @@ class StoreDetailsModelClass {
         AcceptingOrders = acceptingOrders;
         Category = category;
         PushToken = pushToken;
+        Status=status;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
     public void setStoreOwnerName(String storeOwnerName) {
