@@ -1,6 +1,7 @@
 package com.sng.bucbuc_partnerapp;
 
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -38,6 +40,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -47,6 +50,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
+import static android.content.Context.SEARCH_SERVICE;
 
 public class MenuFragment extends Fragment {
 
@@ -61,6 +66,8 @@ public class MenuFragment extends Fragment {
     CoordinatorLayout mRoot;
     LoadingView loadingView;
     String post_key,post;
+
+    SearchView searchView;
 
     FirebaseRecyclerOptions<SectionHeader> options;
     FirebaseRecyclerAdapter<SectionHeader, HeaderViewHolder> adapter;
@@ -136,6 +143,25 @@ public class MenuFragment extends Fragment {
         mRoot=view.findViewById(R.id.parentRelative);
         loadingView=LoadingView.getInstance();
         CategoryRV=view.findViewById(R.id.productCategoryRv);
+        searchView=view.findViewById(R.id.search);
+
+        SearchManager searchManager = (SearchManager) getContext().getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+
+        });
 
         SwipeActions();
 

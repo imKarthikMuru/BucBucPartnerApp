@@ -16,7 +16,8 @@
     <color name="material_green_a200">#69F0AE</color>
     <color name="material_lime_a700">#AEEA00</color>
     <color name="material_purple_a700">#AA00FF</color>
-    
+    <color name="bannerRose">#F15B5C</color>
+    <color name="bannerRoseDark">#E75152</color>
     <color name="Ggreen">#3cba54</color>
     <color name="Gyellow">#f4c20d</color>
     <color name="Gred">#db3236</color>
