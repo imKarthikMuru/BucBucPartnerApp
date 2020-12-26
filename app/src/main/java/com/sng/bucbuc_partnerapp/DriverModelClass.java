@@ -2,13 +2,13 @@ package com.sng.bucbuc_partnerapp;
 
 public class DriverModelClass {
 
-    String Name,Mobile,Status,UID,UserID,BikeNo,BikeModel,Address;
+    String Name,Mobile,Status,UID,UserID,BikeNo,BikeModel,Address,PushToken;
     double Lat,Lng;
 
     public DriverModelClass() {
     }
 
-    public DriverModelClass(String name, String mobile, String status, String UID, String userID, String bikeNo, String bikeModel, String address, double lat, double lng) {
+    public DriverModelClass(String name, String mobile, String status, String UID, String userID, String bikeNo, String bikeModel, String address, double lat, double lng,String pushToken) {
         Name = name;
         Mobile = mobile;
         Status = status;
@@ -19,6 +19,15 @@ public class DriverModelClass {
         Address = address;
         Lat = lat;
         Lng = lng;
+        PushToken=pushToken;
+    }
+
+    public String getPushToken() {
+        return PushToken;
+    }
+
+    public void setPushToken(String pushToken) {
+        PushToken = pushToken;
     }
 
     public String getName() {

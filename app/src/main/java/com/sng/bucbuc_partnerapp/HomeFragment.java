@@ -2,6 +2,7 @@ package com.sng.bucbuc_partnerapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -38,15 +39,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.sng.bucbuc_partnerapp.Notification.NotificationInterface;
+import com.sng.bucbuc_partnerapp.Notification.NotificationRequest;
+import com.sng.bucbuc_partnerapp.Notification.NotificationResponse;
+import com.sng.bucbuc_partnerapp.Notification.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
+
+    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/";
 
     RecyclerView HomeRecyclerView;
     DatabaseReference reference;
@@ -65,6 +76,8 @@ public class HomeFragment extends Fragment {
     private final String KEY_RECYCLER_STATE = "recycler_state";
     private static Bundle mBundleRecyclerViewState;
     private Parcelable mListState = null;
+
+    String storeName,CusPushToken;
 
     @Override
     public void onPause() {
@@ -104,6 +117,9 @@ public class HomeFragment extends Fragment {
         Loading=(LottieAnimationView)view.findViewById(R.id.loading);
         FilterFAB=(FloatingActionButton)view.findViewById(R.id.fabFilter);
         refreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.refresh);
+
+        SharedPreferences prefs = getContext().getSharedPreferences("StoreData", Context.MODE_PRIVATE);
+        storeName=prefs.getString("StoreName","");
 
         if (FirebaseAuth.getInstance().getCurrentUser()!=null){
             uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -259,6 +275,19 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<OrderModelCLass,OrdersV
         final DatabaseReference ref=getRef(position);
         final String post=ref.getKey();
 
+        FirebaseDatabase.getInstance().getReference("Users").child(model.getUserID())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        CusPushToken= String.valueOf(snapshot.child("PushToken").getValue());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
         holder.CustomeName.setText(model.getName());
         holder.AreaNameTV.setText(model.getAddress());
         holder.RateTV.setText("₹"+model.getToPay());
@@ -357,6 +386,9 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<OrderModelCLass,OrdersV
                                     if (task.isSuccessful()){
                                         holder.Accept.setText("Order Accepted");
                                         holder.Accept.setEnabled(false);
+
+                                        sendNotification("Order Status","You Order on "+storeName+" has been Accepted.","MyOrders");
+
                                     }else {
                                         holder.Accept.setText("Try Again");
                                         Toast.makeText(getContext(), "Oh Snap! Something went wrong.", Toast.LENGTH_SHORT).show();
@@ -374,6 +406,37 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<OrderModelCLass,OrdersV
             }
         });
 
+    }
+
+    private void sendNotification(String order_status, String s, String myOrders) {
+
+        NotificationRequest request=new NotificationRequest(CusPushToken,new NotificationRequest.Notification(order_status,s,myOrders));
+
+        Log.d(TAG, "onComplete: :::::::::::::::::"+CusPushToken);
+
+        RetrofitClient.getRetrofit(BASE_URL)
+                .create(NotificationInterface.class)
+                .sent(request)
+                .enqueue(new retrofit2.Callback<NotificationResponse>() {
+                    @Override
+                    public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                        if (response.code() == 200){
+                            Log.d(TAG, "onResponse: :::::::::Message sent");
+                        }else if (response.code()==400){
+                            Log.d(TAG, "onResponse: :::::::::Bad request");
+                        }else if (response.code()==404){
+                            Log.d(TAG, "onResponse: :::::::::Not found 404");
+                        }else {
+                            Log.d(TAG, "onResponse: :::::::::::unknown Error"+response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NotificationResponse> call, Throwable t) {
+
+                        Log.d(TAG, "onFailure: ::::::::::::::"+t.getCause()+"::::::"+t.getMessage()+":::::::::");
+                    }
+                });
     }
 
     @NonNull

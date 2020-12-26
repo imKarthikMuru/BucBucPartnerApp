@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String s="stores";
+        FirebaseMessaging.getInstance().subscribeToTopic(s);
+        FirebaseMessaging.getInstance().subscribeToTopic("BucBuc");
 
         //instance for Bottom Navigation
         bottomNavigationView=findViewById(R.id.bottom_navigation);

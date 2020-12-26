@@ -15,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeNoActionBar">
-        <activity android:name=".OrderDetailsActivity"></activity>
+
+        <activity android:name=".OrderDetailsActivity"/>
+
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".LoginActivity" />
 
@@ -28,7 +30,12 @@
         <activity
             android:name=".HomeFragment"
             tools:ignore="Instantiatable"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <action android:name="Orders"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -47,6 +54,23 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <service
+            android:name=".Notification.FCMService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/logotext" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/LogoOrange" />
+
+
     </application>
 
 </manifest>
