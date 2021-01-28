@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/accept"
+        android:icon="@drawable/ic_accept"
+        android:title="Accepted"
+        />
+
+    <item
+        android:id="@+id/prepare"
+        android:icon="@drawable/ic_timer"
+        android:title="Prepared"
+      />
+
+    <item
+        android:id="@+id/shipped"
+        android:icon="@drawable/ic_shipped"
+        android:title="Shipped"
+    />
+
+<!--    <item-->
+<!--        android:icon="@drawable/ic_delivered"-->
+<!--        android:id="@+id/delivered"-->
+<!--        android:title="Delivered"/>-->
+
+    <item
+        android:icon="@drawable/ic_cancel"
+        android:id="@+id/cancel"
+        android:title="Cancel"/>
+
+</menu>
