@@ -11,7 +11,7 @@ public class FCMService extends FirebaseMessagingService {
 
         String body=remoteMessage.getNotification().getBody();
         String title=remoteMessage.getNotification().getTitle();
-        String image=remoteMessage.getNotification().getImageUrl().toString();
+//        String image=remoteMessage.getNotification().getImageUrl().toString();
         String clickAction=remoteMessage.getNotification().getClickAction();
 
        NotificationHelper helper=new NotificationHelper(this);

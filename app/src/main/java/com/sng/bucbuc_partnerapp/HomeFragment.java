@@ -84,9 +84,10 @@ public class HomeFragment extends Fragment {
         super.onPause();
 
         mBundleRecyclerViewState = new Bundle();
-        mListState = HomeRecyclerView.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, mListState);
-
+        if(mListState!=null) {
+            mListState = HomeRecyclerView.getLayoutManager().onSaveInstanceState();
+            mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, mListState);
+        }
     }
 
     @Override

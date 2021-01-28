@@ -2,6 +2,7 @@ package com.sng.bucbuc_partnerapp;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
@@ -30,12 +32,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.skyfishjy.library.RippleBackground;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,12 +68,16 @@ public class ProfileFragment extends Fragment {
     BottomSheetDialog couponDialog,offerDialog;
     EditText couponET,offerET;
     Button couponUpdate,offerUpdate;
-    TextView ongoingCoupon,ongoingOffer;
+    TextView ongoingCoupon,ongoingOffer,EarningsTV;
 
     Map<String, Object> discount=new HashMap<>();
     Map<String, Object> StoreStatus=new HashMap<>();
 
+    DatabaseReference payoutRef;
+
     int products=0;
+    private String OrderedDate;
+    private String Time;
 
     @Nullable
     @Override
@@ -104,6 +115,10 @@ public class ProfileFragment extends Fragment {
         offerUpdate=offerDialog.findViewById(R.id.offerbtn);
         ongoingOffer=offerDialog.findViewById(R.id.offer);
 
+        EarningsTV=(TextView)view.findViewById(R.id.earnings);
+
+        payoutRef=FirebaseDatabase.getInstance().getReference("PayoutRequests");
+
         loadingView.ShowProgress(getContext(),"Loading your profile.",true);
 
         LogoutBTN.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +154,10 @@ public class ProfileFragment extends Fragment {
                 offerDialog.show();
             }
         });
-        
+
+
+
+
         OnlineSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -270,6 +288,68 @@ public class ProfileFragment extends Fragment {
                                 ongoingOffer.setText("Add offer");
                                 OfferTV.setText("Add Offer");
                             }
+
+                            if (snapshot.child("Payout").exists()){
+                                EarningsTV.setText(String.valueOf(snapshot.child("Payout").getValue()));
+                            }else {
+                                EarningsTV.setText("00.00");
+                            }
+
+                            final DateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+                            OrderedDate = date.format(Calendar.getInstance().getTime());
+
+                            final DateFormat time = new SimpleDateFormat("hh:mm a");
+                            Time = time.format(Calendar.getInstance().getTime());
+
+
+                            AlertDialog alertDialog=new AlertDialog.Builder(getContext())
+                                    .setIcon(R.drawable.logotext)
+                                    .setMessage("You want to payout your earnings money?")
+                                    .setTitle("Are you sure?")
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Map<String, Object> payoutReq = new HashMap<>();
+                                            payoutReq.put("StoreID",uid);
+                                            payoutReq.put("ReqAmount",snapshot.child("Payout").getValue());
+                                            payoutReq.put("Date",OrderedDate);
+                                            payoutReq.put("Time",Time);
+
+                                            Map<String, Object> resetPayout = new HashMap<>();
+                                            resetPayout.put("Payout",0);
+
+                                            if (Integer.parseInt(String.valueOf(snapshot.child("Payout").getValue()))!=0){
+                                                payoutRef.child("Stores").push().setValue(payoutReq).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()){
+                                                            reference.updateChildren(resetPayout);
+                                                        }else {
+                                                            Toast.makeText(getContext(), "Oops! something went wrong, Try later.", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+
+                                            }else {
+                                                Toast.makeText(getContext(), "your earning money value is 0.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).setCancelable(true)
+                                    .create();
+
+
+                            EarningsTV.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    alertDialog.show();
+                                }
+                            });
 
                             couponUpdate.setOnClickListener(new View.OnClickListener() {
                                 @Override

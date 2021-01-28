@@ -182,11 +182,58 @@
                 android:text="Accepting Orders"
                 android:layout_margin="10dp"/>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/dottedline"/>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Earnings"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/pinColor"
+                    android:paddingStart="10dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:alpha="0.8"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:background="@drawable/curved_stroke"
+                    android:textColor="@color/colorPrimary"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:id="@+id/earnings"
+                    android:backgroundTint="@color/pinColor"
+                    android:drawableTint="@android:color/holo_orange_light"
+                    android:drawableStart="@drawable/ic_rupee"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:background="@drawable/dottedline"/>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
